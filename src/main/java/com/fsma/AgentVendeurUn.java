@@ -1,28 +1,20 @@
 package com.fsma;
 
 import jade.core.Agent;
-import javax.swing.JFrame;
+import model.WindowModel;
 
 public class AgentVendeurUn extends Agent {
 
     @Override
     protected void setup() {
-        System.out.println("Bonjour! Mon agent "+getLocalName()+" est prêt.");
+        System.out.println("Agent "+getAID().getName()+" est prêt.");
 
         /* Configuration de la fenêtre */
-        JFrame frame = new JFrame();
-        frame.setSize(600, 250);
-        frame.setTitle(getLocalName());
-        frame.setResizable(false);
-        frame.setLocation(15, 45);
-        frame.setVisible(true);
-
-        /* on ferme la fenêtre et on stop l'agent */
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        new WindowModel(600, 250, getAID().getName(), 160, 60);
     }
 
     @Override
     protected void takeDown() {
-        System.out.println("Mon agent "+getLocalName()+" est terminé.");
+        System.out.println("Mon agent "+getAID().getName()+" est terminé.");
     }
 }
