@@ -2,7 +2,8 @@ module com.fsma {
     requires javafx.fxml;
     requires jade;
     requires java.desktop;
+    requires org.jetbrains.annotations;
 
-    opens com.fsma to javafx.fxml;
-    exports com.fsma;
+    opens View to javafx.fxml;
+    exports View;
 }
