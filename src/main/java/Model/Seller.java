@@ -14,18 +14,18 @@ import UI.SellerUI;
 import java.util.Vector;
 
 public class Seller {
-    
+
     /* Interface utilisateur pour le vendeur */
-    private SellerUI _sellerUi;
+    private final SellerUI _sellerUi;
 
     /* Données pour le vendeur */
     private Vector<Vector<String>> _donnees;
 
     /* Indicateur indiquant si l'état d'initialisation est terminé */
-    private boolean _etatInitialisationTermine = false;
+    private boolean _etatInitialisationTermine;
 
     /* Indicateur indiquant si l'annonce de la fin de l'enchère a été faite */
-    private boolean _annonceFinEnchereEffectuee = false;
+    private boolean _annonceFinEnchereEffectuee;
 
     /* Temps restant en secondes pour le tour d'enchères en cours */
     private int _tempsRestant;
@@ -49,13 +49,13 @@ public class Seller {
     private String _acheteurGagnant;
 
     /* Indicateur indiquant si l'état d'enchères est terminé */
-    private boolean _etatEnchereTermine = false;
+    private boolean _etatEnchereTermine;
 
     /* Indicateur indiquant si le paiement a été reçu par le vendeur */
-    private boolean _paiementRecu = false;
+    private boolean _paiementRecu;
 
     /* Montant que l'acheteur doit payer au vendeur */
-    private int _paiementAcheteur = 0;
+    private int _paiementAcheteur;
 
     /* Prix actuel de l'article vendu par le vendeur */
     private int _prixActuel;
