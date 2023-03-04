@@ -13,7 +13,7 @@ import UI.BuyerUI;
 
 import java.util.Vector;
 
-public class Buyer {
+public class Buyer extends View.Buyer {
 
     /* L'interface utilisateur pour preneur */
     private BuyerUI _buyerUi;
@@ -85,6 +85,8 @@ public class Buyer {
         this._buyerNonPropositonEnd = _buyerNonPropositonEnd;
         this._buyerAnnUpdated = _buyerAnnUpdated;
     }
+
+    public Buyer() { }
 
     public BuyerUI get_buyerUi() {
         return _buyerUi;

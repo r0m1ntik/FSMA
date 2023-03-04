@@ -9,6 +9,7 @@
 
 package View;
 
+import UI.BuyerUI;
 import jade.core.*;
 
 public class Buyer extends Agent {
@@ -17,6 +18,16 @@ public class Buyer extends Agent {
     protected void setup() {
         /* Message au debut */
         System.out.println("Agent "+getAID().getName()+" est prêt.");
+
+        // Initialisation des constructeur de Model et UI
+        Model.Buyer mBuyer = new Model.Buyer();
+        // On donne un nom au Preneur
+        mBuyer.set_buyerName(getAID().getName());
+
+
+        BuyerUI uiBuyer = new BuyerUI(mBuyer);
+        // On attribue une UI au modele
+        mBuyer.set_buyerUi(uiBuyer);
     }
 
     @Override

@@ -13,7 +13,7 @@ import UI.MarketUI;
 
 import java.util.Vector;
 
-public class Market {
+public class Market extends View.Market {
 
     /* Liste des offres des vendeurs */
     private Vector<Vector<String>> _marketListOffres;

@@ -13,7 +13,7 @@ import UI.SellerUI;
 
 import java.util.Vector;
 
-public class Seller {
+public class Seller extends View.Seller {
 
     /* Interface utilisateur pour le vendeur */
     private final SellerUI _sellerUi;
