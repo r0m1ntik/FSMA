@@ -16,7 +16,7 @@ import java.util.Vector;
 public class Seller extends View.Seller {
 
     /* Interface utilisateur pour le vendeur */
-    private final SellerUI _sellerUi;
+    private SellerUI _sellerUi;
 
     /* Données pour le vendeur */
     private Vector<Vector<String>> _donnees;
@@ -79,6 +79,18 @@ public class Seller extends View.Seller {
         this._paiementAcheteur = _paiementAcheteur;
         this._prixActuel = _prixActuel;
         this._timer = _timer;
+    }
+
+    public Seller() {
+
+    }
+
+    public SellerUI get_sellerUi() {
+        return _sellerUi;
+    }
+
+    public void set_sellerUi(SellerUI _sellerUi) {
+        this._sellerUi = _sellerUi;
     }
 
     public Vector<Vector<String>> get_donnees() {

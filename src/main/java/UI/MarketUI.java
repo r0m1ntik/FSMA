@@ -28,7 +28,7 @@ public class MarketUI extends JFrame {
         //récuperer la dimension de l'écran
         Dimension tailleMoniteur = Toolkit.getDefaultToolkit().getScreenSize();
         int longueur = tailleMoniteur.width / 4;
-        int hauteur = tailleMoniteur.height / 4;
+        int hauteur = tailleMoniteur.height * 4 / 10;
         // Position au centre
         this.setLocation(longueur, hauteur);
 
