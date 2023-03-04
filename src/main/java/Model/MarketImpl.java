@@ -13,7 +13,7 @@ import UI.MarketUI;
 import java.util.Vector;
 
 public class MarketImpl extends Market {
-    public MarketImpl(Vector<Vector<String>> _marketListOffres, Vector<String> _marketListAbonnementBuyer, MarketUI _MarketUi) {
-        super(_marketListOffres, _marketListAbonnementBuyer, _MarketUi);
+    public MarketImpl(Vector<Vector<String>> _marketListOffres, Vector<String> _marketListAbonnementBuyer, MarketUI _MarketUi, String _MarketName) {
+        super(_marketListOffres, _marketListAbonnementBuyer, _MarketUi, _MarketName);
     }
 }

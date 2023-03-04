@@ -54,8 +54,8 @@ public class BuyerUI extends JFrame implements ActionListener {
 
         //récuperer la dimension de l'écran
         Dimension tailleMoniteur = Toolkit.getDefaultToolkit().getScreenSize();
-        int longueur = tailleMoniteur.width * 1/4;
-        int hauteur = tailleMoniteur.height * 1/4;
+        int longueur = tailleMoniteur.width / 4;
+        int hauteur = tailleMoniteur.height / 4;
         // Position au centre
         this.setLocation(longueur, hauteur);
 

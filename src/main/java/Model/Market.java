@@ -21,11 +21,28 @@ public class Market extends View.Market {
     private Vector<String> _marketListAbonnementBuyer;
 
     /* L'interface utilisateur pour Market */
-    private final MarketUI _MarketUi;
+    private MarketUI _MarketUi;
 
-    public Market(Vector<Vector<String>> _marketListOffres, Vector<String> _marketListAbonnementBuyer, MarketUI _MarketUi) {
+    private String _MarketName;
+
+    public Market(Vector<Vector<String>> _marketListOffres, Vector<String> _marketListAbonnementBuyer, MarketUI _MarketUi, String name) {
         this._marketListOffres = _marketListOffres;
         this._marketListAbonnementBuyer = _marketListAbonnementBuyer;
+        this._MarketUi = _MarketUi;
+        this._MarketName = name;
+    }
+
+    public Market() { }
+
+    public String get_MarketName() {
+        return _MarketName;
+    }
+
+    public void set_MarketName(String _MarketName) {
+        this._MarketName = _MarketName;
+    }
+
+    public void set_MarketUi(MarketUI _MarketUi) {
         this._MarketUi = _MarketUi;
     }
 
