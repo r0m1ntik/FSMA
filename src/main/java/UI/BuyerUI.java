@@ -27,7 +27,12 @@ public class BuyerUI extends JFrame implements ActionListener {
     private final JButton boutonProposer; // Bouton pour proposer un prix
     private final JLabel statutLabel; // Étiquette pour le statut de l'enchère
     private final JTextField budgetTexte; // Champ de texte pour le budget
+
     private final JTable tableauEnchere; // Tableau pour afficher les enchères
+
+    private final Vector<Vector<String>> donneesTableau;
+
+    private final JPanel panneauPrincipal;
 
     // Constructeur
     public BuyerUI(Model.Buyer preneurAgent) {
@@ -40,7 +45,7 @@ public class BuyerUI extends JFrame implements ActionListener {
 
         // Panneaux
         // Panneau principal
-        JPanel panneauPrincipal = new JPanel();
+        panneauPrincipal = new JPanel();
         this.statutLabel = new JLabel("Choisissez votre mode de fonctionnement (manuel ou automatique).");
         this.budgetTexte = new JTextField(10);
         this.budgetTexte.setText("1500");
@@ -61,7 +66,7 @@ public class BuyerUI extends JFrame implements ActionListener {
 
         // Tableau
         // Données du tableau
-        Vector<Vector<String>> donneesTableau = new Vector<>();
+        donneesTableau = new Vector<>();
         CellObjectRenderer objRender = new CellObjectRenderer();
         Vector<String> columnNames = new Vector<>(Arrays.asList("Vendeur", "Nom du lot", "Prix"));
         this.tableauEnchere = new JTable(donneesTableau, columnNames);
@@ -162,12 +167,41 @@ public class BuyerUI extends JFrame implements ActionListener {
         this.statutLabel.setText(text);
     }
 
+    public void unSelectAll() {
+        this.tableauEnchere.clearSelection();
+    }
+
     public int[] getSelectedRows(){
         return this.tableauEnchere.getSelectedRows();
     }
 
     public void setEnableBoutonPropose(boolean isActive){
         this.boutonProposer.setEnabled(isActive);
+    }
+
+    public void resetRowEnchere(Vector<Vector<String>> originDataVector) {
+        this.donneesTableau.removeAllElements();
+        donneesTableau.addAll(originDataVector);
+        refreshGUI();
+    }
+
+    public void updateTableVente(int positionAnnonce, Vector<String> originDataVector) {
+        donneesTableau.set(positionAnnonce, originDataVector);
+        refreshGUI();
+    }
+
+    public void addTableVente(Vector<String> originDataVector) {
+        donneesTableau.add(originDataVector);
+        refreshGUI();
+    }
+
+    public void refreshGUI() {
+        this.tableauEnchere.invalidate();
+        this.tableauEnchere.revalidate();
+        this.tableauEnchere.repaint();
+        this.panneauPrincipal.invalidate();
+        this.panneauPrincipal.revalidate();
+        this.panneauPrincipal.repaint();
     }
 
     @Override

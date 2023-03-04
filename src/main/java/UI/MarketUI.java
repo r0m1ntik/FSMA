@@ -16,6 +16,10 @@ import java.util.Vector;
 
 public class MarketUI extends JFrame {
 
+    private Vector<Vector<String>> data;
+    private JTable buyersTable;
+    private JPanel mainPanel;
+
     public MarketUI(Model.Market market) {
 
         // Initialisation de la fenêtre
@@ -34,11 +38,11 @@ public class MarketUI extends JFrame {
 
         // Liste des composants de la fenêtre
         Vector<String> columnNames = new Vector<>(Arrays.asList("Vendeur", "Nom du lot", "Montant courant de l'enchère"));
-        Vector<Vector<String>> data = new Vector<>();
-        JTable buyersTable = new JTable(data, columnNames);
+        data = new Vector<>();
+        buyersTable = new JTable(data, columnNames);
         buyersTable.getTableHeader().setBackground(Color.LIGHT_GRAY);
         JScrollPane buyersScrollPane = new JScrollPane(buyersTable);
-        JPanel mainPanel = new JPanel();
+        mainPanel = new JPanel();
         mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.PAGE_AXIS));
         setContentPane(mainPanel);
         JPanel agentStatusPanel = new JPanel();
@@ -57,5 +61,24 @@ public class MarketUI extends JFrame {
         mainPanel.add(agentStatusPanel);
         mainPanel.revalidate();
         mainPanel.repaint();
+    }
+
+    public void majTable(int positionAnnonce,Vector<String> originDataVector) {
+        this.data.set(positionAnnonce, originDataVector);
+        updateInter();
+    }
+
+    public void ajoutNewTable(Vector<String> originDataVector) {
+        this.data.add(originDataVector);
+        updateInter();
+    }
+
+    private void updateInter() {
+        this.buyersTable.invalidate();
+        this.buyersTable.revalidate();
+        this.buyersTable.repaint();
+        this.mainPanel.invalidate();
+        this.mainPanel.revalidate();
+        this.mainPanel.repaint();
     }
 }

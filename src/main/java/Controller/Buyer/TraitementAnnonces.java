@@ -9,5 +9,66 @@
 
 package Controller.Buyer;
 
-public class TraitementAnnonces {
+import View.Buyer;
+import jade.core.behaviours.Behaviour;
+import jade.lang.acl.ACLMessage;
+
+import java.util.Vector;
+
+public class TraitementAnnonces extends Behaviour {
+
+    private final Buyer buyerAgent;
+    private final Model.Buyer buyerModel;
+
+    public TraitementAnnonces(Buyer buyerAgent, Model.Buyer buyerModel) {
+        super();
+        this.buyerAgent = buyerAgent;
+        this.buyerModel = buyerModel;
+    }
+
+    @Override
+    public void action() {
+        System.out.println("[Buyer -> Behaviour]: action(): " + this.buyerModel.is_buyerAbonne());
+        if(!this.buyerModel.is_buyerAbonne()){
+            this.buyerModel.set_buyerAbonne(true);
+            this.buyerAgent.envoiMessage("Marche", this.buyerModel.get_buyerName(), ACLMessage.SUBSCRIBE);
+        }
+        this.buyerAgent.receiveMsg(this.buyerAgent, this.buyerModel);
+    }
+
+    @Override
+    public boolean done() {
+        if (!this.buyerModel.is_buyerAbonneEmpty() && this.buyerModel.is_buyerMode() && this.buyerModel.is_buyerAnnonceSelecte()){
+            this.buyerModel.get_buyerUi().setStatut("Abonnement OK");
+            for (int i = 0; i < this.buyerModel.get_buyerAnnounces().length; i++ ){
+                Vector<String> data = this.buyerModel.get_ventes().get(this.buyerModel.get_buyerAnnounces()[i]);
+                if(data.get(3).equals("Ouvert")){
+                    data.set(3,"Propose");
+                    this.buyerModel.get_ventes().set(this.buyerModel.get_buyerAnnounces()[i], data);
+                    this.buyerAgent.envoiMessage(data.get(0), this.buyerModel.get_buyerName(), ACLMessage.PROPOSE);
+                }
+            }
+            int positionVecteur = 0;
+            int tailleVecteurOriginale = this.buyerModel.get_ventes().size();
+            for (int i = 0; i< tailleVecteurOriginale; i++ ){
+                Vector<String> data = this.buyerModel.get_ventes().get(positionVecteur);
+                if (!data.get(3).equals("Propose")){
+                    this.buyerModel.get_ventes().remove(positionVecteur);
+                }else{
+                    positionVecteur++;
+                }
+            }
+            this.buyerModel.get_buyerUi().setEnableBoutonPropose(false);
+            this.buyerModel.get_buyerUi().unSelectAll();
+            this.buyerModel.get_buyerUi().resetRowEnchere(this.buyerModel.get_ventes());
+            if (this.buyerModel.get_ventes().size() == 0) {
+                this.buyerModel.get_buyerUi().setStatut("Il n'y a plus d'enchères disponibles.");
+                this.buyerModel.doDelete();
+            }
+            //this.buyerAgent.addBehaviour(new WaitForOffer(this.buyerAgent));
+            this.buyerModel.set_buyerInitEnd(true);
+            return true;
+        }
+        return (this.buyerModel.is_buyerInitEnd());
+    }
 }

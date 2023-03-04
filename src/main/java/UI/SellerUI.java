@@ -44,6 +44,8 @@ public class SellerUI extends JFrame implements ActionListener {
     // Champ de texte pour entrer la diminution de prix minimum pour chaque enchère
     private final JTextField _minimumPriceDecreaseTextField;
 
+    private final JLabel _agentStatusLabel;
+
     public SellerUI(Seller seller) throws HeadlessException {
         // Initialise l'instance de vendeur
         this.seller = seller;
@@ -65,7 +67,7 @@ public class SellerUI extends JFrame implements ActionListener {
         // Label qui affiche le temps restant avant la fin de la vente aux enchères
         JLabel _remainingTimeLabel = new JLabel(""); // étiquette pour afficher le temps restant
         // Label qui affiche le statut de l'agent de vente
-        JLabel _agentStatusLabel = new JLabel("Créez votre annonce."); // étiquette pour afficher le statut du vendeur
+        _agentStatusLabel = new JLabel("Créez votre annonce."); // étiquette pour afficher le statut du vendeur
         // étiquette pour afficher le nom de l'acheteur remportant l'enchère
         this._auctionStatusLabel = new JLabel(); // étiquette pour afficher le statut de l'enchère
 
@@ -138,7 +140,7 @@ public class SellerUI extends JFrame implements ActionListener {
         // bouton crée une annonce
         if (e.getSource() == this._addButton) {
             if (this._itemNameTextField.getText().trim().length() == 0) {
-                JOptionPane.showMessageDialog(null, "Erreur: pas de nom de lot", "Erreur sur le prix du lot", JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(null, "Erreur: pas de nom de lot", "Erreur sur le nom du lot", JOptionPane.INFORMATION_MESSAGE);
                 return;
             }
 
@@ -146,7 +148,7 @@ public class SellerUI extends JFrame implements ActionListener {
             try {
                 prixLot = Integer.parseInt(this._initialPriceTextField.getText());
                 if (prixLot < 0) {
-                    JOptionPane.showMessageDialog(null, "Erreur: prix invalide, entrez un entier positif non null", "Erreur sur le prix du lot", JOptionPane.INFORMATION_MESSAGE);
+                    JOptionPane.showMessageDialog(null, "Prix est invalide, entrez un entier positif non null", "Erreur sur le prix du lot", JOptionPane.INFORMATION_MESSAGE);
                     return;
                 }
             } catch (NumberFormatException ex) {
@@ -184,6 +186,8 @@ public class SellerUI extends JFrame implements ActionListener {
                 if (pasDecrLot < 1) {
                     JOptionPane.showMessageDialog(null, "Pas de décrément invalide, veuillez entrer un nombre entier positif supérieur à 1.", "Erreur sur la décrémentation", JOptionPane.INFORMATION_MESSAGE);
                 } else {
+                    this._auctionStatusLabel.setText("Ouvert");
+                    this._agentStatusLabel.setText("Annonce crée pour " + this._itemNameTextField.getText() + " au prix de " + this._initialPriceTextField.getText() + " euros.");
                     this.seller.set_nomArticle(this._itemNameTextField.getText());
                     this.seller.set_prixActuel(Integer.parseInt(this._initialPriceTextField.getText()));
                     this.seller.set_statutEnchere(this._auctionStatusLabel.getText());
@@ -192,6 +196,13 @@ public class SellerUI extends JFrame implements ActionListener {
                     this.seller.set_decrementation(pasDecrLot);
                     this.seller.set_etatEnchereTermine(true);
                     this.seller.doWake();
+
+                    this._itemNameTextField.setEnabled(false);
+                    this._initialPriceTextField.setEnabled(false);
+                    this._minimumPriceIncreaseTextField.setEnabled(false);
+                    this._minimumPriceDecreaseTextField.setEnabled(false);
+                    this._remainingTimeTextField.setEnabled(false);
+                    this._addButton.setEnabled(false);
                 }
             } catch (NumberFormatException ex) {
                 JOptionPane.showMessageDialog(null, ex.getMessage(), "Erreur sur la décrémentation", JOptionPane.INFORMATION_MESSAGE);

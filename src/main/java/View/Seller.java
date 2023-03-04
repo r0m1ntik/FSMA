@@ -9,8 +9,11 @@
 
 package View;
 
+import Controller.Seller.Initialisation;
 import UI.SellerUI;
+import jade.core.AID;
 import jade.core.Agent;
+import jade.lang.acl.ACLMessage;
 
 public class Seller extends Agent {
 
@@ -29,11 +32,24 @@ public class Seller extends Agent {
 
         // On attribue une UI au modele
         mSeller.set_sellerUi(uiSeller);
+
+        // Initialisation du controleur pour le marché
+        Initialisation sellerInit = new Initialisation(this, mSeller);
+        addBehaviour(sellerInit);
     }
 
     @Override
     protected void takeDown() {
         /* Message à la fin */
         System.out.println("Agent "+getAID().getName()+" est terminé.");
+    }
+
+    public void envoiMessage(String receiver, String msg, int perf) {
+        ACLMessage message = new ACLMessage(perf);
+        message.addReceiver(new AID(receiver, AID.ISLOCALNAME));
+        message.setLanguage("FishMarket");
+        message.setOntology("FishSale-ontology");
+        message.setContent(msg);
+        send(message);
     }
 }

@@ -86,7 +86,10 @@ public class Buyer extends View.Buyer {
         this._buyerAnnUpdated = _buyerAnnUpdated;
     }
 
-    public Buyer() { }
+    public Buyer() {
+        this._buyerAbonne = false;
+        this._buyerAnnonceSelecte = false;
+    }
 
     public BuyerUI get_buyerUi() {
         return _buyerUi;
