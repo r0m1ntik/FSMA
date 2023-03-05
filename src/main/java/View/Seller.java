@@ -34,13 +34,14 @@ public class Seller extends Agent {
         mSeller.set_etatInitialisationTermine(false);
         mSeller.set_paiementRecu(false);
         mSeller.set_annonceFinEnchereEffectuee(false);
+        mSeller.set_donnees(new Vector<>());
 
         SellerUI uiSeller = new SellerUI(mSeller, this);
         // On attribue une UI au modele
         mSeller.set_sellerUi(uiSeller);
 
         // Initialisation du controleur pour le marché
-        Initialisation sellerInit = new Initialisation(this, mSeller);
+        Initialisation sellerInit = new Initialisation(this, mSeller, uiSeller);
         addBehaviour(sellerInit);
     }
 
@@ -75,11 +76,9 @@ public class Seller extends Agent {
                 }
             }
             if (exist){
-                System.out.println("exist");
                 sellerModel.get_donnees().set(positionExistant, new Vector<>(Arrays.asList(msgR, "A propose")));
                 sellerModel.get_sellerUi().updateTableAcheteur(positionExistant, sellerModel.get_donnees().get(positionExistant));
             } else {
-                System.out.println("not exist");
                 sellerModel.get_donnees().add(new Vector<>(Arrays.asList(msgR,"A propose")));
                 sellerModel.get_sellerUi().addTableAcheteur(new Vector<>(Arrays.asList(msgR,"A propose")));
             }

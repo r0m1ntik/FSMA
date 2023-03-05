@@ -19,33 +19,34 @@ public class Initialisation extends Behaviour {
     private final Seller sellerAgent;
     private final Model.Seller sellerModel;
 
+    private final UI.SellerUI sellerUI;
+
     // On crée un constructeur pour initialiser la variable vendeurAgent
-    public Initialisation(Seller sellerAgent, Model.Seller sellerModel) {
+    public Initialisation(Seller sellerAgent, Model.Seller sellerModel, UI.SellerUI sellerUI) {
         super();
         this.sellerAgent = sellerAgent;
         this.sellerModel = sellerModel;
+        this.sellerUI = sellerUI;
     }
 
     @Override
     public void action() {
         // L'agent vendeur attend une action
-        System.out.println("[Seller -> Initialisation]: action()");
         this.sellerAgent.doWait();
+        this.sellerUI.setTempsRestant(String.valueOf(this.sellerModel.get_timer()));
     }
 
     @Override
     public boolean done() {
-        System.out.println("[Seller -> Initialisation]: done()");
         // Si l'état initial de l'agent vendeur est terminé
         if (this.sellerModel.is_etatInitialisationTermine()){
-            System.out.println("[Seller -> Initialisation]: this.sellerModel.is_etatEnchereTermine()");
             // On réinitialise le montant à payer par l'acheteur à 0
             this.sellerModel.set_paiementAcheteur(0);
             // On met à jour le temps de repos de l'agent vendeur avec le temps actuel
-            this.sellerModel.set_tempsRestant(this.sellerModel.get_tempsRestant());
+            this.sellerModel.set_tempsRestant(this.sellerModel.get_timer());
 
             // On ajoute un comportement pour attendre la première offre de l'acheteur
-            this.sellerAgent.addBehaviour(new AttentePremiereOffre(this.sellerAgent, this.sellerModel));
+            this.sellerAgent.addBehaviour(new AttentePremiereOffre(this.sellerAgent, this.sellerModel, this.sellerUI));
 
             // On crée un message pour informer le marché de la vente
             String[] parts = this.sellerModel.get_nomAgentVendeur().split("@");

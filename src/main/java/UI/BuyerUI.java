@@ -247,10 +247,11 @@ public class BuyerUI extends JFrame implements ActionListener {
                 this.buyer.set_buyerAnnonceSelecte(true);
                 this.buyerAgent.doWake();
             } else {
-                this.boutonDemarrerEnchere.setEnabled(false);
+                JOptionPane.showMessageDialog(null, "S'il vous plaît choisissez une vente.",
+                        "Erreur", JOptionPane.INFORMATION_MESSAGE);
             }
         } else if (source.equals(this.boutonProposer)) {
-            this.setStatut("offre(s) enchérie(s).");
+            this.setStatut("Offre(s) enchérie(s).");
             this.buyer.set_buyerProposition(true);
             this.buyerAgent.doWake();
         }
@@ -276,16 +277,15 @@ public class BuyerUI extends JFrame implements ActionListener {
                 setForeground(Color.WHITE);
             }
 
-            if (ValCell.equals("Enchère gagnée !")) {
+            if (ValCell.equals("Vous avez la meilleure offre, vous avez gagné l'enchère !")) {
                 setBackground(Color.GREEN);
                 setForeground(Color.BLACK);
             }
 
-            if (ValCell.equals("Enchère terminee")) {
+            if (ValCell.equals("La période d'enchère est terminée.")) {
                 setBackground(Color.RED);
                 setForeground(Color.BLACK);
             }
-
             return this;
         }
     }

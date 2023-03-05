@@ -15,9 +15,11 @@ import jade.core.*;
 import jade.lang.acl.ACLMessage;
 
 import java.util.Arrays;
+import java.util.Observable;
+import java.util.Observer;
 import java.util.Vector;
 
-public class Buyer extends Agent {
+public class Buyer extends Agent implements Observer {
 
     @Override
     protected void setup() {
@@ -29,6 +31,7 @@ public class Buyer extends Agent {
         // On donne un nom au Preneur
         mBuyer.set_buyerName(getAID().getName());
         mBuyer.set_ventes(new Vector<>());
+        mBuyer.set_buyerAttrLot(false);
 
         BuyerUI uiBuyer = new BuyerUI(mBuyer, this);
         // On attribue une UI au modele
@@ -90,5 +93,10 @@ public class Buyer extends Agent {
         } else {
             buyerAgent.doWait();
         }
+    }
+
+    @Override
+    public void update(Observable o, Object arg) {
+
     }
 }

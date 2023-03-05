@@ -48,7 +48,8 @@ public class TraitementAnnonces extends Behaviour {
                 if(data.get(3).equals("Ouvert")){
                     data.set(3,"Propose");
                     this.buyerModel.get_ventes().set(this.buyerModel.get_buyerAnnounces()[i], data);
-                    this.buyerAgent.envoiMessage(data.get(0), this.buyerModel.get_buyerName(), ACLMessage.PROPOSE);
+                    String[] parts = this.buyerModel.get_buyerName().split("@");
+                    this.buyerAgent.envoiMessage(data.get(0), parts[0], ACLMessage.PROPOSE);
                 }
             }
             System.out.println("data(3): " + this.buyerModel.get_buyerAnnounces().length);

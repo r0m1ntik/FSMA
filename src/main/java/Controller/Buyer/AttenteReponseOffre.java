@@ -79,17 +79,17 @@ public class AttenteReponseOffre extends Behaviour {
     @Override
     public boolean done() {
         if(this.buyerModel.is_buyerProposition()) {
-            //this.buyerAgent.addBehaviour(new Paiement(this.buyerAgent, this.buyerModel)); TODO
+            this.buyerAgent.addBehaviour(new Paiement(this.buyerAgent, this.buyerModel));
             return true;
         } else if (this.buyerModel.is_buyerAnnUpdated()){
             this.buyerModel.set_buyerAnnUpdated(false);
             this.buyerModel.set_buyerNonPropositonEnd(false);
             this.buyerModel.get_buyerUi().setEnableBoutonPropose(true);
-            //this.buyerAgent.addBehaviour(new AttenteReponseOffre(this.buyerAgent, this.buyerModel)); TODO
+            this.buyerAgent.addBehaviour(new AttenteReponseOffre(this.buyerAgent, this.buyerModel));
             return true;
         } else if (this.buyerModel.is_buyerNonPropositonEnd()){
             this.buyerModel.set_buyerNonPropositonEnd(false);
-            //this.buyerAgent.addBehaviour(new AttenteAttribution(this.buyerAgent, this.buyerModel)); TODO
+            this.buyerAgent.addBehaviour(new AttenteAttribution(this.buyerAgent, this.buyerModel));
             return true;
         }else
             return false;

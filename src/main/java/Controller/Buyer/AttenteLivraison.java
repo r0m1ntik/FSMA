@@ -33,10 +33,10 @@ public class AttenteLivraison extends Behaviour {
         if (this.buyerModel.is_buyerReceivGiveEnd()){
             for (int i = 0; i < this.buyerModel.get_ventes().size(); i++) {
                 if (this.buyerModel.get_ventes().get(i).get(0).equals(this.buyerModel.get_buyerMsg())) {
-                    this.buyerModel.get_ventes().get(i).set(3, "Enchére gagnée !");
+                    this.buyerModel.get_ventes().get(i).set(3, "Vous avez la meilleure offre, vous avez gagné l'enchère !");
                 }
             }
-            this.buyerModel.get_buyerUi().setStatut("Enchére gagnée !");
+            this.buyerModel.get_buyerUi().setStatut("Vous avez la meilleure offre, vous avez gagné l'enchère !");
             this.buyerModel.get_buyerUi().setEnableBoutonPropose(false);
             return true;
         } else {

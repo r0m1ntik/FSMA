@@ -30,7 +30,7 @@ public class Buyer extends View.Buyer {
     /* Stocke le budget du preneur */
     private int _buyerBudget;
 
-    /* Message d'affichage pour le preneur */
+    /* Message d'affichage pour le preneur vendeur win*/
     private String _buyerMsg;
 
     /* Mode selectionné par le preneur (auto ou manuel) */

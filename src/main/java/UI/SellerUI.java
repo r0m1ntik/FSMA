@@ -246,6 +246,8 @@ public class SellerUI extends JFrame implements ActionListener {
                     this._minimumPriceDecreaseTextField.setEnabled(false);
                     this._remainingTimeTextField.setEnabled(false);
                     this._addButton.setEnabled(false);
+
+                    this.setTempsRestant(String.valueOf(this.seller.get_timer()));
                 }
             } catch (NumberFormatException ex) {
                 JOptionPane.showMessageDialog(null, ex.getMessage(), "Erreur sur la décrémentation", JOptionPane.INFORMATION_MESSAGE);
@@ -271,7 +273,7 @@ public class SellerUI extends JFrame implements ActionListener {
         }
         refreshGUI();
     }
-    private void refreshGUI() {
+    public void refreshGUI() {
         this._biddersTable.invalidate();
         this._biddersTable.revalidate();
         this._biddersTable.repaint();
