@@ -37,21 +37,23 @@ public class Initialisation extends Behaviour {
     public boolean done() {
         System.out.println("[Seller -> Initialisation]: done()");
         // Si l'état initial de l'agent vendeur est terminé
-        if (this.sellerModel.is_etatEnchereTermine()){
+        if (this.sellerModel.is_etatInitialisationTermine()){
+            System.out.println("[Seller -> Initialisation]: this.sellerModel.is_etatEnchereTermine()");
             // On réinitialise le montant à payer par l'acheteur à 0
-            this.sellerModel.set_prixActuel(0);
+            this.sellerModel.set_paiementAcheteur(0);
             // On met à jour le temps de repos de l'agent vendeur avec le temps actuel
             this.sellerModel.set_tempsRestant(this.sellerModel.get_tempsRestant());
 
             // On ajoute un comportement pour attendre la première offre de l'acheteur
-            //this.sellerModel.addBehaviour(new WaitFirstBid(this.sellerAgent));
+            this.sellerAgent.addBehaviour(new AttentePremiereOffre(this.sellerAgent, this.sellerModel));
 
             // On crée un message pour informer le marché de la vente
-            String messageVente = (this.sellerModel.get_nomAgentVendeur() + "," + this.sellerModel.get_nomArticle() + "," + this.sellerModel.get_prixActuel()
+            String[] parts = this.sellerModel.get_nomAgentVendeur().split("@");
+            String messageVente = (parts[0] + "," + this.sellerModel.get_nomArticle() + "," + this.sellerModel.get_prixActuel()
                     + "," + this.sellerModel.get_statutEnchere());
 
             // On envoie le message au marché avec le protocole CFP
-            this.sellerAgent.envoiMessage("Marche", messageVente, ACLMessage.CFP );
+            this.sellerAgent.envoiMessage("Marche", messageVente, ACLMessage.CFP);
         }
         // On retourne vrai si l'état initial de l'agent vendeur est terminé, sinon on retourne faux
         return (this.sellerModel.is_etatEnchereTermine());

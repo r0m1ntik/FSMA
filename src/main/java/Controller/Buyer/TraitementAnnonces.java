@@ -9,6 +9,7 @@
 
 package Controller.Buyer;
 
+import Model.Market;
 import View.Buyer;
 import jade.core.behaviours.Behaviour;
 import jade.lang.acl.ACLMessage;
@@ -28,16 +29,18 @@ public class TraitementAnnonces extends Behaviour {
 
     @Override
     public void action() {
-        System.out.println("[Buyer -> Behaviour]: action(): " + this.buyerModel.is_buyerAbonne());
+        System.out.println("[Buyer -> TraitementAnnounces]: action(): " + this.buyerModel.is_buyerAbonne());
         if(!this.buyerModel.is_buyerAbonne()){
             this.buyerModel.set_buyerAbonne(true);
-            this.buyerAgent.envoiMessage("Marche", this.buyerModel.get_buyerName(), ACLMessage.SUBSCRIBE);
+            String[] parts = this.buyerModel.get_buyerName().split("@");
+            this.buyerAgent.envoiMessage("Marche", parts[0], ACLMessage.SUBSCRIBE);
         }
         this.buyerAgent.receiveMsg(this.buyerAgent, this.buyerModel);
     }
 
     @Override
     public boolean done() {
+        System.out.println("[Buyer -> TraitementAnnounces]: done(): " + this.buyerModel.is_buyerAbonne());
         if (!this.buyerModel.is_buyerAbonneEmpty() && this.buyerModel.is_buyerMode() && this.buyerModel.is_buyerAnnonceSelecte()){
             this.buyerModel.get_buyerUi().setStatut("Abonnement OK");
             for (int i = 0; i < this.buyerModel.get_buyerAnnounces().length; i++ ){
@@ -48,6 +51,7 @@ public class TraitementAnnonces extends Behaviour {
                     this.buyerAgent.envoiMessage(data.get(0), this.buyerModel.get_buyerName(), ACLMessage.PROPOSE);
                 }
             }
+            System.out.println("data(3): " + this.buyerModel.get_buyerAnnounces().length);
             int positionVecteur = 0;
             int tailleVecteurOriginale = this.buyerModel.get_ventes().size();
             for (int i = 0; i< tailleVecteurOriginale; i++ ){
@@ -65,7 +69,7 @@ public class TraitementAnnonces extends Behaviour {
                 this.buyerModel.get_buyerUi().setStatut("Il n'y a plus d'enchères disponibles.");
                 this.buyerModel.doDelete();
             }
-            //this.buyerAgent.addBehaviour(new WaitForOffer(this.buyerAgent));
+            this.buyerAgent.addBehaviour(new AttenteAttribution(this.buyerAgent, this.buyerModel));
             this.buyerModel.set_buyerInitEnd(true);
             return true;
         }

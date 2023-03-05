@@ -49,7 +49,7 @@ public class Behaviour extends CyclicBehaviour {
     private void traiterCFP(String messageRecu) {
         String[] champsMsg = messageRecu.split(",");
         int positionExistant = getPositionAnnonce(champsMsg[0]);
-
+        System.out.println("traiterCFP: " + messageRecu);
         if (positionExistant != -1) {
             this.marketModel.get_marketListOffres().set(positionExistant, new Vector<>(Arrays.asList(champsMsg)));
             this.marketModel.get_MarketUi().majTable(positionExistant, this.marketModel.get_marketListOffres().get(positionExistant));
@@ -62,6 +62,7 @@ public class Behaviour extends CyclicBehaviour {
     }
 
     private void traiterSubscribe(String messageRecu) {
+        System.out.println("traiterSubscribe: " + this.marketModel.get_marketListAbonnementBuyer().contains(messageRecu));
         if (this.marketModel.get_marketListAbonnementBuyer().contains(messageRecu)) {
             return;
         }

@@ -37,14 +37,14 @@ public class MarketUI extends JFrame {
         this.setLocation(longueur, hauteur);
 
         // Liste des composants de la fenêtre
-        Vector<String> columnNames = new Vector<>(Arrays.asList("Vendeur", "Nom du lot", "Montant courant de l'enchère"));
+        Vector<String> columnNames = new Vector<>(Arrays.asList("Vendeur", "Nom du lot", "Montant courant de l'enchère", "Statut"));
         data = new Vector<>();
         buyersTable = new JTable(data, columnNames);
         buyersTable.getTableHeader().setBackground(Color.LIGHT_GRAY);
         JScrollPane buyersScrollPane = new JScrollPane(buyersTable);
         mainPanel = new JPanel();
         mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.PAGE_AXIS));
-        setContentPane(mainPanel);
+        this.setContentPane(mainPanel);
         JPanel agentStatusPanel = new JPanel();
         JPanel windowTitlePanel = new JPanel();
         JPanel buyersPanel = new JPanel();

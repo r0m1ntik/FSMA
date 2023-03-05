@@ -23,6 +23,8 @@ public class SellerUI extends JFrame implements ActionListener {
     // Variable représentant l'agent de vente lié à cette interface graphique
     private final Seller seller;
 
+    private final View.Seller sellerAgent;
+
     // Bouton "Ajouter" pour ajouter un nouvel objet à la vente
     private final JButton _addButton;
 
@@ -45,10 +47,24 @@ public class SellerUI extends JFrame implements ActionListener {
     private final JTextField _minimumPriceDecreaseTextField;
 
     private final JLabel _agentStatusLabel;
+    
+    private final Vector<Vector<String>> _biddersDataVector;
+    
+    private final JPanel _mainPanel;
 
-    public SellerUI(Seller seller) throws HeadlessException {
+    private final JTable _biddersTable;
+
+    private final JLabel _remainingTimeLabel;
+
+    private final JLabel _lotName;
+    private final JLabel _price;
+    private final JLabel _lotAcheteur;
+    private final JLabel _statut;
+
+    public SellerUI(Seller seller, View.Seller sellerAgent) throws HeadlessException {
         // Initialise l'instance de vendeur
         this.seller = seller;
+        this.sellerAgent = sellerAgent;
 
         // Initialise la fenêtre
         this.setLocationRelativeTo(null); // centrer la fenêtre sur l'écran
@@ -65,11 +81,16 @@ public class SellerUI extends JFrame implements ActionListener {
         this.setLocation(longueur, hauteur); // définir la position de la fenêtre
 
         // Label qui affiche le temps restant avant la fin de la vente aux enchères
-        JLabel _remainingTimeLabel = new JLabel(""); // étiquette pour afficher le temps restant
+        _remainingTimeLabel = new JLabel(""); // étiquette pour afficher le temps restant
         // Label qui affiche le statut de l'agent de vente
         _agentStatusLabel = new JLabel("Créez votre annonce."); // étiquette pour afficher le statut du vendeur
         // étiquette pour afficher le nom de l'acheteur remportant l'enchère
         this._auctionStatusLabel = new JLabel(); // étiquette pour afficher le statut de l'enchère
+
+        _lotName = new JLabel();
+        _price = new JLabel();
+        _lotAcheteur = new JLabel();
+        _statut = new JLabel();
 
         // Initialiser les champs de texte pour la création d'une annonce
         this._itemNameTextField = new JTextField("Daurade"); // champ de texte pour le nom de l'objet mis en vente
@@ -82,16 +103,27 @@ public class SellerUI extends JFrame implements ActionListener {
         this._addButton = new JButton("Créer annonce");
         this._addButton.addActionListener(this);
 
+        JPanel gridLot = new JPanel();
+        gridLot.setLayout(new GridLayout(2,4));
+        gridLot.add(new JLabel("Nom lot"));
+        gridLot.add(new JLabel("Prix actuel"));
+        gridLot.add(new JLabel("Acheteur"));
+        gridLot.add(new JLabel("Statut"));
+        gridLot.add(_lotName);
+        gridLot.add(_price);
+        gridLot.add(_lotAcheteur);
+        gridLot.add(_statut);
+
         // Initialiser la table d'enchères
-        Vector<String> nomColumn = new Vector<>(Arrays.asList("Annonce", "Prix", "Agent preneur"));
+        Vector<String> nomColumn = new Vector<>(Arrays.asList("Agent Acheteur", "Statut"));
         // Vecteur contenant les données du tableau d'enchérisseurs
-        Vector<Vector<String>> _biddersDataVector = new Vector<>();
+        _biddersDataVector = new Vector<>();
         // Tableau affichant les enchérisseurs actuels et leur prix d'enchère
-        JTable _biddersTable = new JTable(_biddersDataVector, nomColumn);
+        _biddersTable = new JTable(_biddersDataVector, nomColumn);
         _biddersTable.getTableHeader().setBackground(Color.LIGHT_GRAY); // définir la couleur
         JScrollPane propSP = new JScrollPane(_biddersTable);
         // Panel principal qui contient tous les éléments de l'interface
-        JPanel _mainPanel = new JPanel();
+        _mainPanel = new JPanel();
         _mainPanel.setLayout(new BoxLayout(_mainPanel, BoxLayout.PAGE_AXIS));
         this.setContentPane(_mainPanel);
 
@@ -107,30 +139,34 @@ public class SellerUI extends JFrame implements ActionListener {
         creationLot.add(new JLabel("Incrémentation"));
         creationLot.add(new JLabel("Décrementation"));
         creationLot.add(new JLabel(""));
-        
+
         creationLot.add(this._itemNameTextField);
         creationLot.add(this._initialPriceTextField);
         creationLot.add(this._remainingTimeTextField);
         creationLot.add(this._minimumPriceIncreaseTextField);
         creationLot.add(this._minimumPriceDecreaseTextField);
         creationLot.add(this._addButton);
+
+        JPanel mineMiseEnchere = new JPanel();
         
         JPanel lineTableauPreneur = new JPanel();
         lineTableauPreneur.setLayout(new BoxLayout(lineTableauPreneur,BoxLayout.LINE_AXIS));
         lineTableauPreneur.add(propSP);
-        
-        JPanel lineStatut = new JPanel();
-        lineStatut.setLayout(new FlowLayout(FlowLayout.LEFT));
-        lineStatut.add(_agentStatusLabel);
+
+        JPanel _lineStatut = new JPanel();
+        _lineStatut.setLayout(new FlowLayout(FlowLayout.LEFT));
+        _lineStatut.add(_agentStatusLabel);
 
         _mainPanel.add(lineNameAgent);
         _mainPanel.add(new JSeparator());
         _mainPanel.add(creationLot);
+        _mainPanel.add(mineMiseEnchere);
         _mainPanel.add(new JSeparator());
+        _mainPanel.add(gridLot);
         _mainPanel.add(new JSeparator());
         _mainPanel.add(lineTableauPreneur);
         _mainPanel.add(new JSeparator());
-        _mainPanel.add(lineStatut);
+        _mainPanel.add(_lineStatut);
         _mainPanel.revalidate();
         _mainPanel.repaint();
     }
@@ -186,16 +222,23 @@ public class SellerUI extends JFrame implements ActionListener {
                 if (pasDecrLot < 1) {
                     JOptionPane.showMessageDialog(null, "Pas de décrément invalide, veuillez entrer un nombre entier positif supérieur à 1.", "Erreur sur la décrémentation", JOptionPane.INFORMATION_MESSAGE);
                 } else {
-                    this._auctionStatusLabel.setText("Ouvert");
+                    //
                     this._agentStatusLabel.setText("Annonce crée pour " + this._itemNameTextField.getText() + " au prix de " + this._initialPriceTextField.getText() + " euros.");
+
+                    // vente
+                    this._lotName.setText(this._itemNameTextField.getText());
+                    this._price.setText(this._initialPriceTextField.getText());
+                    this._statut.setText("Ouvert");
+
+                    // offres
                     this.seller.set_nomArticle(this._itemNameTextField.getText());
                     this.seller.set_prixActuel(Integer.parseInt(this._initialPriceTextField.getText()));
-                    this.seller.set_statutEnchere(this._auctionStatusLabel.getText());
+                    this.seller.set_statutEnchere(this._statut.getText());
                     this.seller.set_timer(tempsLot);
                     this.seller.set_incrementation(pasIncrLot);
                     this.seller.set_decrementation(pasDecrLot);
-                    this.seller.set_etatEnchereTermine(true);
-                    this.seller.doWake();
+                    this.seller.set_etatInitialisationTermine(true);
+                    this.sellerAgent.doWake();
 
                     this._itemNameTextField.setEnabled(false);
                     this._initialPriceTextField.setEnabled(false);
@@ -208,5 +251,51 @@ public class SellerUI extends JFrame implements ActionListener {
                 JOptionPane.showMessageDialog(null, ex.getMessage(), "Erreur sur la décrémentation", JOptionPane.INFORMATION_MESSAGE);
             }
         }
+    }
+
+    public void updateTableAcheteur(int positionAnnonce, Vector<String> originDataVector) {
+        this._biddersDataVector.set(positionAnnonce, originDataVector);
+        refreshGUI();
+    }
+
+    public void addTableAcheteur(Vector<String> originDataVector) {
+        this._biddersDataVector.add(originDataVector);
+        refreshGUI();
+    }
+
+    public void resetStatutAcheteur() {
+        for (int i = 0; i < this._biddersDataVector.size(); i++){
+            Vector<String> data = this._biddersDataVector.get(i);
+            data.set(1,"N'as pas encore propose");
+            this._biddersDataVector.set(i, data);
+        }
+        refreshGUI();
+    }
+    private void refreshGUI() {
+        this._biddersTable.invalidate();
+        this._biddersTable.revalidate();
+        this._biddersTable.repaint();
+        this._mainPanel.invalidate();
+        this._mainPanel.revalidate();
+        this._mainPanel.repaint();
+    }
+
+    public void finEnchere(String gagnant) {
+        this._remainingTimeLabel.setText("Enchére terminé!");
+        this._lotAcheteur.setText(gagnant);
+    }
+
+    public void setPrixActuelAffichage(int prix){
+        this._initialPriceTextField.setText(String.valueOf(prix));
+    }
+    
+    public void setStatutLot(String text){
+        this._auctionStatusLabel.setText(text);
+    }
+    public void setStatut(String text){
+        this._agentStatusLabel.setText(text);
+    }
+    public void setTempsRestant(String text){
+        this._remainingTimeLabel.setText(" Temps: " + text + " secondes");
     }
 }

@@ -29,7 +29,6 @@ public class Market extends Agent {
 
         // On donne un nom au market
         mMarket.set_MarketName(getAID().getName());
-
         // Initialisation des vecteurs (nullpointerexeption)
         mMarket.set_marketListAbonnementBuyer(new Vector<>());
         mMarket.set_marketListOffres(new Vector<>());

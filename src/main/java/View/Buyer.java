@@ -28,8 +28,9 @@ public class Buyer extends Agent {
         Model.Buyer mBuyer = new Model.Buyer();
         // On donne un nom au Preneur
         mBuyer.set_buyerName(getAID().getName());
+        mBuyer.set_ventes(new Vector<>());
 
-        BuyerUI uiBuyer = new BuyerUI(mBuyer);
+        BuyerUI uiBuyer = new BuyerUI(mBuyer, this);
         // On attribue une UI au modele
         mBuyer.set_buyerUi(uiBuyer);
 
@@ -55,12 +56,14 @@ public class Buyer extends Agent {
 
     public void receiveMsg(Buyer buyerAgent, Model.Buyer buyerModel){
         String messageRecu;
+        System.out.println("receiveMsg: ");
         ACLMessage msg = receive();
         if (msg != null && msg.getPerformative() == ACLMessage.PROPAGATE) {
             messageRecu = msg.getContent();
             boolean existe = false;
             int positionExistant = 0;
             String[] champsMsg = messageRecu.split(",");
+            System.out.println(" buyerModel.get_ventes(): " +  buyerModel.get_ventes());
             for (int i = 0; i < buyerModel.get_ventes().size(); i++) {
                 if (buyerModel.get_ventes().get(i).get(0).equals(champsMsg[0])) {
                     existe = true;
@@ -68,13 +71,13 @@ public class Buyer extends Agent {
                     break;
                 }
             }
-            if(existe){
+            if (existe){
                 buyerModel.get_ventes().set(positionExistant, new Vector<>(Arrays.asList(champsMsg)));
                 buyerModel.get_buyerUi().updateTableVente(positionExistant, buyerModel.get_ventes().get(positionExistant));
                 if (champsMsg[3].equals("Ouvert")){
                     buyerModel.set_buyerAnnUpdated(true);
                 }
-            }else if(!buyerModel.is_buyerInitEnd()){
+            } else if (!buyerModel.is_buyerInitEnd()){
                 buyerModel.get_ventes().add(new Vector<>(Arrays.asList(champsMsg)));
                 buyerModel.get_buyerUi().addTableVente(new Vector<>(Arrays.asList(champsMsg)));
                 buyerModel.set_buyerAbonneEmpty(false);

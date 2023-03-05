@@ -20,7 +20,8 @@ import java.util.Vector;
 public class BuyerUI extends JFrame implements ActionListener {
 
     // Déclaration des variables avec des noms explicites
-    private final Model.Buyer buyer; // Agent preneur
+    private final Model.Buyer buyer; // Model preneur
+    private final View.Buyer buyerAgent; // Agent preneur
     private final JButton boutonManuel; // Bouton pour mode manuel
     private final JButton boutonAutomatique; // Bouton pour mode automatique
     private final JButton boutonDemarrerEnchere; // Bouton pour démarrer l'enchère
@@ -35,9 +36,10 @@ public class BuyerUI extends JFrame implements ActionListener {
     private final JPanel panneauPrincipal;
 
     // Constructeur
-    public BuyerUI(Model.Buyer preneurAgent) {
+    public BuyerUI(Model.Buyer buyerModel, View.Buyer buyerAgent) {
         // Initialisation des variables
-        this.buyer = preneurAgent;
+        this.buyer = buyerModel;
+        this.buyerAgent = buyerAgent;
         this.boutonManuel = new JButton("Démarrer en manuel");
         this.boutonAutomatique = new JButton("Démarrer en automatique");
         this.boutonDemarrerEnchere = new JButton("Passer aux enchères!");
@@ -68,14 +70,14 @@ public class BuyerUI extends JFrame implements ActionListener {
         // Données du tableau
         donneesTableau = new Vector<>();
         CellObjectRenderer objRender = new CellObjectRenderer();
-        Vector<String> columnNames = new Vector<>(Arrays.asList("Vendeur", "Nom du lot", "Prix"));
+        Vector<String> columnNames = new Vector<>(Arrays.asList("Vendeur", "Nom du lot", "Prix", "Statut"));
         this.tableauEnchere = new JTable(donneesTableau, columnNames);
-        this.tableauEnchere.getTableHeader().setBackground(Color.LIGHT_GRAY);
-
         this.tableauEnchere.setDefaultRenderer(java.lang.Object.class,objRender);
-        this.tableauEnchere.getColumnModel().getColumn(0).setMinWidth(150);
-        this.tableauEnchere.getColumnModel().getColumn(1).setMinWidth(150);
-        this.tableauEnchere.getColumnModel().getColumn(2).setMinWidth(150);
+        this.tableauEnchere.getColumnModel().getColumn(0).setMinWidth(100);
+        this.tableauEnchere.getColumnModel().getColumn(1).setMinWidth(100);
+        this.tableauEnchere.getColumnModel().getColumn(2).setMinWidth(100);
+        this.tableauEnchere.getColumnModel().getColumn(3).setMinWidth(100);
+        this.tableauEnchere.getTableHeader().setBackground(Color.LIGHT_GRAY);
 
         // Ajout des composants au panneau principal
         panneauPrincipal.add(this.boutonManuel);
@@ -206,7 +208,7 @@ public class BuyerUI extends JFrame implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        int[] selectedRowsTableEnchere = this.getSelectedRows();
+        int[] selectedRowsTableEnchere = this.tableauEnchere.getSelectedRows();
 
         Object source = e.getSource();
         if (source.equals(this.boutonManuel)) {
@@ -215,7 +217,7 @@ public class BuyerUI extends JFrame implements ActionListener {
             this.budgetTexte.setEnabled(false);
             this.boutonDemarrerEnchere.setEnabled(true);
             this.setStatut("Prêt à rejoindre une enchère.");
-            this.buyer.set_buyerType("Manuel");
+            this.buyer.set_buyerType("MANUEL");
             this.buyer.set_buyerMode(true);
         } else if (source.equals(this.boutonAutomatique)) {
             try {
@@ -230,23 +232,27 @@ public class BuyerUI extends JFrame implements ActionListener {
                 this.boutonDemarrerEnchere.setEnabled(true);
                 this.budgetTexte.setEnabled(false);
                 this.setStatut("Prêt à rejoindre une enchère.");
-                this.buyer.set_buyerType("Automatique");
+                this.buyer.set_buyerType("AUTO");
                 this.buyer.set_buyerMode(true);
-                this.buyer.doWake();
+                this.buyerAgent.doWake();
             } else {
                 JOptionPane.showMessageDialog(null, "S'il vous plaît entrer un nombre positif non nul.",
                         "Erreur", JOptionPane.INFORMATION_MESSAGE);
             }
         } else if (source.equals(this.boutonDemarrerEnchere)) {
-            this.buyer.set_buyerAnnounces(selectedRowsTableEnchere);
-            this.buyer.set_buyerAnnonceSelecte(true);
-            this.setEnableBoutonPropose(false);
-            this.boutonDemarrerEnchere.setEnabled(false);
-            this.buyer.doWake();
+            if (selectedRowsTableEnchere.length > 0) {
+                this.buyer.set_buyerAnnounces(selectedRowsTableEnchere);
+                this.setEnableBoutonPropose(false);
+                this.boutonDemarrerEnchere.setEnabled(false);
+                this.buyer.set_buyerAnnonceSelecte(true);
+                this.buyerAgent.doWake();
+            } else {
+                this.boutonDemarrerEnchere.setEnabled(false);
+            }
         } else if (source.equals(this.boutonProposer)) {
             this.setStatut("offre(s) enchérie(s).");
             this.buyer.set_buyerProposition(true);
-            this.buyer.doWake();
+            this.buyerAgent.doWake();
         }
     }
 
